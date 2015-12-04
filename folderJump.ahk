@@ -49,6 +49,15 @@ return
 return
 
 #If Call.HasKey(ClassMouseOver())
+#a::
+    WinId := WinMouseOver()
+    WinActivate ahk_id %WinId%
+    Menu, Favorites, Enable, Add This Path
+    Menu Favorites, Show
+return
+
+
+#If Call.HasKey(ClassMouseOver())
 MButton::
     WinId := WinMouseOver()
     WinActivate ahk_id %WinId%
@@ -192,19 +201,51 @@ XP_Explorer(Path)
 DirectoryOpus(Path)
 {
     WinGetTitle Title, A
-
     ControlGetFocus, FileListControl, %Title%
 
-    if ErrorLevel
+    if (ErrorLevel)
+    {
         MsgBox, The target window doesn't exist or none of its controls has input focus.
+    }
     else
-        ; get target control name 
-        StringReplace, PathControlNumber, FileListControl, dopus.filedisplay,, All
-        ;MsgBox, Control with focus = %FileListControl%
-        ;MsgBox, Control number = %PathControl%
+    {
+        ; get target path Edit control name
+        /*
+            There can be multiple filedisplay control (some of which are hidden)
+            However they remain in numerical order if there is more than one present
+            There path control edits are only ever name Edit1 and Edit2 (when present)
+        */
+        StringReplace, FileDisplayControlNumber, FileListControl, dopus.filedisplay,, All
 
-    ControlSetText Edit%PathControlNumber%, %Path%, A
-    ControlSend Edit%PathControlNumber%, {Enter}, A
+        ; search through all controls and check if there is a visible filedisplay control with a smaller number
+        PathControlNumber := 1
+        WinGet, ActiveControlList, ControlList, A
+        Loop, Parse, ActiveControlList, `n
+        {
+            controlname := SubStr(A_LoopField, 1 ,17)
+            if (controlname == "dopus.filedisplay") && (A_LoopField != FileListControl)
+            {
+                controlname2 := SubStr(A_LoopField, 1 ,26)
+                if (controlname2 != "dopus.filedisplaycontainer" )
+                {
+                    ControlGet, ControlVisible, Visible,, %A_LoopField%
+                    if(ControlVisible == 1)
+                    {
+                        StringReplace, controlNumber, A_LoopField, dopus.filedisplay,, All
+                        ;MsgBox,  %controlNumber%
+                        if (controlNumber < FileDisplayControlNumber)
+                        {
+                            ;MsgBox, a visible control with a smaller number exists
+                            PathControlNumber += 1
+                        }
+                    }
+                }
+            }
+        }
+        ControlSetText Edit%PathControlNumber%, %Path%, A
+        ControlSend Edit%PathControlNumber%, {Enter}, A
+        ;MsgBox, Edit%PathControlNumber%
+    }
 }
 
 AddThisPath()
