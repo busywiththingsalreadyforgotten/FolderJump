@@ -44,6 +44,7 @@ GuiClose:
 return
 
 +MButton::
+    Menu, Favorites, Disable, Add This Path
     Menu Favorites, Show
 return
 
@@ -51,6 +52,7 @@ return
 MButton::
     WinId := WinMouseOver()
     WinActivate ahk_id %WinId%
+    Menu, Favorites, Enable, Add This Path
     Menu Favorites, Show
 return
 
