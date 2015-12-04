@@ -421,5 +421,6 @@ MakeTrayMenu()
   Menu Tray, Add
 	Menu Tray, Add, Edit Custom Menu, MenuCall
 	Menu Tray, Default, Edit Custom Menu
+    Menu, Tray, Icon, folderJump.ico 
 }
 
