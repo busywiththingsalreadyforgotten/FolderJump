@@ -13,7 +13,6 @@ SetBatchLines -1
 ListLines Off
 SendMode Input
 SetWorkingDir %A_ScriptDir%
-
 ; Autoexecute
 	MakeGUI()
     MakeTrayMenu()
@@ -72,6 +71,7 @@ MakeCallTable()
     Call["About"] := Func("About")
     Call["Edit Custom Menu"] := Func("ShowGUI")
     Call["Edit This Menu"] := Func("ShowGUI")
+    Call["Add This Path"] := Func("AddThisPath")
     
     Call["Progman"] := Func("NewWindow")
     Call["CabinetWClass"] := Func("Explorer")
@@ -83,7 +83,7 @@ MakeCallTable()
 
 LoadListView()
 {
-	if FileExist("DirMenu.txt")
+	if FileExist("folderJumpPaths.txt")
 		ReadFile()
 	else
 		FirstRun()
@@ -108,7 +108,7 @@ FirstRun()
 ReadFile()
 {
     LV_Delete()
-    Loop Read, DirMenu.txt
+    Loop Read, folderJumpPaths.txt
     {
         StringSplit Item, A_LoopReadLine, %A_Tab%
 		LV_Add("", Item1, Item2)
@@ -132,6 +132,7 @@ UpdateMenu()
             Menu Favorites, Add, %Name%, OpenFavorite
     }
     Menu Favorites, Add
+    Menu Favorites, Add, Add This Path, MenuCall
     Menu Favorites, Add, Edit This Menu, MenuCall
 }
 
@@ -148,10 +149,10 @@ Console(Path)
 Dialog(Path)
 {
     WinGetTitle Title, A
-    if not RegExMatch(Title, "i)save|open") {
-        NewWindow(Path)
-        return
-    }
+    ;if not RegExMatch(Title, "i)save|open") {
+    ;    NewWindow(Path)
+    ;    return
+    ;}
     ControlFocus Edit1, A
     ControlGetText OldText, Edit1, A
     ControlSetText Edit1, %Path%, A
@@ -204,6 +205,33 @@ DirectoryOpus(Path)
     ControlSend Edit%PathControlNumber%, {Enter}, A
 }
 
+AddThisPath()
+{
+    ; check if in directory DirectoryOpus
+    activeClass := ClassMouseOver() 
+    if ( activeClass == "dopus.lister")
+    {
+        WinWaitActive, ahk_class %activeClass%
+        WinGetTitle Title, A
+        ControlGetFocus, FileListControl, %Title%
+        if ErrorLevel
+            MsgBox, The target window doesn't exist or none of its controls has input focus.
+        else
+            ;MsgBox, Control with focus = %FileListControl%
+            StringReplace, PathControlNumber, FileListControl, dopus.filedisplay,, All
+            ControlGetText, PathText, Edit%PathControlNumber%, A
+            InputBox Name, Menu Name, Please Enter a name, , 250, 130
+            if (ErrorLevel)
+                return
+            FileAppend % Name . A_Tab . PathText "`n", folderJumpPaths.txt
+            ReadFile()
+    } 
+    else
+    {
+        MsgBox, %activeClass%
+    }
+}
+
 
 ; Add a new entry to the ListView
 Add()
@@ -214,7 +242,7 @@ Add()
     if (Path = "")
         return
     
-    InputBox Name, Menu Name, Please Enter a name for the new entry:, , 250, 120
+    InputBox Name, Menu Name, Please Enter a name for the new entry:, , 250, 130
     if (ErrorLevel)
         return
     
@@ -244,7 +272,7 @@ Modify()
         return
     
     InputBox NewName, Menu Name
-           , Enter a name for the entry:, , 250, 120, , , , , %Name%
+           , Enter a name for the entry:, , 250, 130, , , , , %Name%
     if (ErrorLevel)
         return
     
@@ -300,14 +328,14 @@ MoveUp()
 OK()
 {
     Gui Cancel    
-    FileDelete DirMenu.txt
+    FileDelete folderJumpPaths.txt
     
     Loop % LV_GetCount() {
         LV_GetText(Name, A_Index, 1)
         LV_GetText(Path, A_Index, 2)
-        FileAppend % Name . A_Tab . Path "`n", DirMenu.txt
+        FileAppend % Name . A_Tab . Path "`n", folderJumpPaths.txt
     }
-    FileSetAttrib +H, DirMenu.txt
+    FileSetAttrib +H, folderJumpPaths.txt
     GuiControl Disable, Re&vert
     UpdateMenu()
 }
