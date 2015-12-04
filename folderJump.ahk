@@ -1,7 +1,7 @@
 /*
-	Name:		Dirmenu.ahk
-	Author:		Robert Ryan
-	Version:	2.0
+	Name:		folderJump.ahk
+
+    Based on dirMenu.ahk by Robert Ryan
 
 	Function:
 		See the About box
@@ -77,6 +77,8 @@ MakeCallTable()
     Call["CabinetWClass"] := Func("Explorer")
     Call["#32770"] := Func("Dialog")
     Call["ConsoleWindowClass"] := Func("Console")
+
+    Call["dopus.lister"] := Func("DirectoryOpus")
 }
 
 LoadListView()
@@ -183,6 +185,25 @@ XP_Explorer(Path)
     ControlSetText Edit1, %Path%, A
     ControlSend Edit1, {Enter}, A
 }
+
+DirectoryOpus(Path)
+{
+    WinGetTitle Title, A
+
+    ControlGetFocus, FileListControl, %Title%
+
+    if ErrorLevel
+        MsgBox, The target window doesn't exist or none of its controls has input focus.
+    else
+        ; get target control name 
+        StringReplace, PathControlNumber, FileListControl, dopus.filedisplay,, All
+        ;MsgBox, Control with focus = %FileListControl%
+        ;MsgBox, Control number = %PathControl%
+
+    ControlSetText Edit%PathControlNumber%, %Path%, A
+    ControlSend Edit%PathControlNumber%, {Enter}, A
+}
+
 
 ; Add a new entry to the ListView
 Add()
