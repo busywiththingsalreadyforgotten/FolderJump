@@ -4,13 +4,13 @@
 
 <p>
 <p>By default, The following window types are supported:</p>
-<li>
-<ul>- Standard file-open or file-save dialogs</ul>
-<ul>- Explorer windows</ul>
-<ul>- Console (command prompt) windows</ul>
-<ul>- The Desktop</ul>
-<ul>- Directory Opus 11</ul>
-</li>
+<ul>
+<li>Standard file-open or file-save dialogs</li>
+<li>Explorer windows</li>
+<li>Console (command prompt) windows</li>
+<li>The Desktop</li>
+<li>Directory Opus 11</li>
+</ul>
 </p>
 <p>A GUI is also included to reorder or change the folder paths</p>
 <p><b>!!!! Please change the openPathinDopus variable to 0 if you are not using directory opus !!!!</b></p>
