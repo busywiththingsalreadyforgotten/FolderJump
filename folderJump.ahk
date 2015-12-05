@@ -287,15 +287,29 @@ Console(Path)
 Dialog(Path)
 {
   WinGetTitle Title, A
-  ;if not RegExMatch(Title, "i)save|open") {
-  ;    NewWindow(Path)
-  ;    return
-  ;}
-  ControlFocus Edit1, A
-  ControlGetText OldText, Edit1, A
-  ControlSetText Edit1, %Path%, A
-  ControlSend Edit1, {Enter}, A
-  ControlSetText Edit1, %OldText%, A
+  activeClass := ClassMouseOver() 
+  if ( isWindow_StandardFileDialog() )
+  {
+    ;ControlSetText, Path, ToolbarWindow324, A
+
+    Send !d
+    Send ^a
+    Send, %Path%
+    Send {Enter}
+    
+  }
+  else if ( isWindow_SelectFolderDialog() )
+  {
+    ControlFocus Edit1, A
+    ControlGetText OldText, Edit1, A
+    ControlSetText Edit1, %Path%, A
+    ControlSend Edit1, {Enter}, A
+    ControlSetText Edit1, %OldText%, A
+  }
+  else 
+  {
+     showMessage("Unrecognised dialog class: %activeClass%")
+  }
 }
 
 Explorer(Path)
