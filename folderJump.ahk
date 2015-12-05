@@ -697,7 +697,7 @@ About()
 
       Clicking middle mouse button (or pressing win + a) while hovering over certain window types will bring up a custom menu of your favorite folders. Upon selecting a favorite, the script will instantly switch to that folder within the active window. 
       
-      Holding down the Shift key while clicking the middle mouse button will bring up the menu regardless of which window the mouse is over. The folder in this case will be shown in a new Explorer window.
+      Holding down the Shift key while clicking the middle mouse button will bring up the menu regardless of which window the mouse is over. The folder in this case will be shown in a new Explorer window or in the Directory opus lister.
 
       By default, The following window types are supported:
       - Standard file-open or file-save dialogs
