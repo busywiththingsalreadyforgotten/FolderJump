@@ -10,13 +10,11 @@
 
   To do:
     - Add tree view support (for those pesky browse for folder dialogues)
-    - "Add this path" support for standard windows explorer
-    - Done. "Add this path" support for standard dialogs
     - Add error checking throughout script
     - add check that path exists before adding to folderjump.txt
     - add check that path exists before navigating ot a folder
     - change open folder in new window to open in directory opus
-    - test whta happen when multiple diretory opus windows are open
+    - test what happens when multiple diretory opus windows are open
 */
 
 #NoEnv
