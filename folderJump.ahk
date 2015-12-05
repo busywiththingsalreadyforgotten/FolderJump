@@ -349,7 +349,8 @@ XP_Explorer(Path)
 DirectoryOpus(Path)
 {
   WinGetTitle Title, A
-  ControlGetFocus, FileListControl, %Title%
+  ;ControlGetFocus, FileListControl, %Title%
+  MouseGetPos, , , , FileListControl
 
   if (ErrorLevel)
   {
@@ -404,6 +405,7 @@ AddThisPath()
     WinWaitActive, ahk_class %activeClass%
     WinGetTitle Title, A
     ControlGetFocus, FileListControl, %Title%
+    
     if (ErrorLevel)
     {
       showMessage("The target window doesn't exist or none of its controls has input focus.")
