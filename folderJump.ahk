@@ -363,6 +363,7 @@ DirectoryOpus(Path, UseFocusedFileListControl=0)
   {
     ControlGetFocus, FileListControl, %Title%
   }
+  ;MouseGetPos, , , , FileListControl
 
   if (ErrorLevel)
   {
