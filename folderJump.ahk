@@ -57,6 +57,10 @@ OpenFavorite:
   {
     NewWindow(Path)
   }
+  else if (A_ThisHotkey = "#+a") 
+  {
+    NewWindow(Path)
+  }
   else 
   {
     WinWaitActive ahk_id %WinId%
@@ -68,6 +72,7 @@ GuiClose:
   Cancel()
 return
 
+#+a::
 +MButton::
   UpdateMenuItemStates()
   Menu Favorites, Show
@@ -273,7 +278,7 @@ NewWindow(Path)
       Run, %dopusExecutable%
     }
     WinWaitActive, ahk_class dopus.lister
-    DirectoryOpus(Path)
+    DirectoryOpus(Path,1)
   }
 }
 
@@ -346,10 +351,18 @@ XP_Explorer(Path)
   ControlSend Edit1, {Enter}, A
 }
 
-DirectoryOpus(Path)
+DirectoryOpus(Path, UseFocusedFileListControl=0)
 {
   WinGetTitle Title, A
-  ControlGetFocus, FileListControl, %Title%
+
+  if (UseFocusedFileListControl == 0)
+  {
+    MouseGetPos, , , , FileListControl
+  }
+  else
+  {
+    ControlGetFocus, FileListControl, %Title%
+  }
 
   if (ErrorLevel)
   {
@@ -404,6 +417,7 @@ AddThisPath()
     WinWaitActive, ahk_class %activeClass%
     WinGetTitle Title, A
     ControlGetFocus, FileListControl, %Title%
+    
     if (ErrorLevel)
     {
       showMessage("The target window doesn't exist or none of its controls has input focus.")
@@ -697,7 +711,7 @@ About()
 
       Clicking middle mouse button (or pressing win + a) while hovering over certain window types will bring up a custom menu of your favorite folders. Upon selecting a favorite, the script will instantly switch to that folder within the active window. 
       
-      Holding down the Shift key while clicking the middle mouse button will bring up the menu regardless of which window the mouse is over. The folder in this case will be shown in a new Explorer window or in the Directory opus lister.
+      Holding down the Shift key while clicking the middle mouse button (or pressing win + shift + a) wwill bring up the menu regardless of which window the mouse is over. The folder in this case will be shown in a new Explorer window or in the Directory opus lister.
 
       By default, The following window types are supported:
       - Standard file-open or file-save dialogs
